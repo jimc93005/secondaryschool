@@ -1,0 +1,181 @@
+{% extends "school_app/base.html" %}
+
+{% block content %}
+
+<style>
+/* ==== PAGE TITLE ==== */
+.page-title {
+    color: #0040ff;
+    font-weight: 700;
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 25px;
+    animation: fadeDown .7s ease-out;
+}
+
+/* ==== SEARCH BAR ==== */
+.search-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.search-input {
+    width: 60%;
+    padding: 14px 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(0,102,255,0.35);
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(12px);
+    font-size: 16px;
+    color: #0033cc;
+    outline: none;
+    transition: box-shadow .3s ease;
+}
+
+.search-input:focus {
+    box-shadow: 0 0 8px rgba(0,102,255,0.45);
+}
+
+/* ==== GRID LAYOUT ==== */
+.dept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+/* ==== GLASS CARD (No 3D) ==== */
+.glass-card {
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    padding: 24px;
+    border-radius: 22px;
+    border: 1px solid rgba(255,255,255,0.28);
+    text-align: center;
+    transition: background .35s ease;
+    animation: slideUp .8s ease;
+}
+
+.glass-card:hover {
+    background: rgba(255,255,255,0.26); /* subtle hover only */
+}
+
+/* ==== CARD TITLE ==== */
+.glass-title {
+    font-size: 24px;
+    color: #0040ff;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* ==== BLUE BUTTON (WATERMARK, No 3D) ==== */
+.glass-btn {
+    background: rgba(0,102,255,0.18);
+    backdrop-filter: blur(12px);
+    padding: 14px 22px;
+    border-radius: 14px;
+    border: 1px solid rgba(0,102,255,0.45);
+    text-decoration: none;
+    color: #0040ff;
+    font-weight: 600;
+    display: inline-block;
+    transition: background .25s ease;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ripple effect */
+.glass-btn::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+}
+
+.glass-btn:hover::after {
+    animation: ripple .6s linear;
+}
+
+@keyframes ripple {
+    from { width: 0; height: 0; opacity: 0.6; }
+    to { width: 350px; height: 350px; opacity: 0; }
+}
+
+.glass-btn:hover {
+    background: rgba(0,102,255,0.28);
+    color: #0033cc;
+}
+
+/* ==== FAB BUTTON (Floating Add Button, No 3D) ==== */
+.fab {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #0066ff;
+    color: white;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    border: none;
+    font-size: 34px;
+    cursor: pointer;
+    transition: background .25s ease;
+}
+
+.fab:hover {
+    background: #0054d6;
+}
+
+/* ==== ANIMATIONS ==== */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+</style>
+
+<h2 class="page-title">Departments</h2>
+
+<!-- Search bar -->
+<div class="search-box">
+    <input class="search-input" type="text" placeholder="Search departments...">
+</div>
+
+<!-- Department cards -->
+<div class="dept-grid">
+    {% for department in departments %}
+        <div class="glass-card">
+            <div class="glass-title">{{ department.text }}</div>
+
+            <a class="glass-btn"
+               href="{% url 'school_app:subjects' department.id %}">
+                View Subjects
+            </a>
+        </div>
+
+    {% empty %}
+        <div class="glass-card">
+            <div class="glass-title">No departments yet.</div>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Floating Add Button -->
+<a href="{% url 'school_app:new_department' %}">
+    <button class="fab">+</button>
+</a>
+
+{% endblock content %}

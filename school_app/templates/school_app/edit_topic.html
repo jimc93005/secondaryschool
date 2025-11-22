@@ -1,0 +1,12 @@
+{% extends 'school_app/base.html' %}
+{% block content %}
+
+  <h2>Edit topics for {{subject}}</h2>
+  <form action="{% url 'school_app:edit_topic' topic.id %}" method="post">
+      {% csrf_token %}
+    {{ form.as_p }}
+    <button name="submit">Save changes</button>
+
+  </form>
+
+{% endblock content%}

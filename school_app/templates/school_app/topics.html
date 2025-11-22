@@ -1,0 +1,121 @@
+{% extends "school_app/base.html" %}
+
+{% block content %}
+
+<style>
+/* ==== GOLD BACKGROUND ==== */
+body {
+    background: linear-gradient(135deg, #fceabb, #f8b500);
+    padding: 20px;
+}
+
+/* ==== PAGE TITLE ==== */
+.page-title {
+    color: #704214;
+    font-size: 34px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ==== TOPIC LIST CONTAINER ==== */
+.topic-container {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(18px);
+    padding: 25px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.4);
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto 25px auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+/* ==== TOPIC ITEM ==== */
+.topic-item {
+    background: rgba(255,255,255,0.35);
+    padding: 14px 20px;
+    margin-bottom: 14px;
+    border-radius: 14px;
+    border-left: 5px solid #b8860b;
+}
+
+.topic-date {
+    font-size: 13px;
+    color: #5e4610;
+}
+
+.topic-text {
+    font-size: 17px;
+    margin-top: 6px;
+    color: #3e2a04;
+}
+
+/* ==== BUTTONS ==== */
+.gold-btn {
+    display: inline-block;
+    background: #b8860b;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: background .25s ease;
+}
+
+.gold-btn:hover {
+    background: #916f08;
+}
+
+/* ==== LINKS ==== */
+.back-link {
+    display: inline-block;
+    margin-top: 18px;
+    color: #5e3f05;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+</style>
+
+
+<h2 class="page-title">Topics for {{ subject.text }}</h2>
+
+<div class="topic-container">
+    {% for topi in topic %}
+        <div class="topic-item">
+            <div class="topic-date">
+                Date added: {{ topi.date_added|date:'M d, Y H:i' }}
+            </div>
+
+            <div class="topic-text">
+                {{ topi.text|linebreaks }}
+            </div>
+
+            <a class="gold-btn" href="{% url 'school_app:edit_topic' topi.id %}">
+                Edit Topic
+            </a>
+        </div>
+    {% empty %}
+        <div class="topic-item">
+            No topics for {{ subject }} have been added yet.
+        </div>
+    {% endfor %}
+</div>
+
+<a class="gold-btn" href="{% url 'school_app:new_topics' subject.id %}">
+    Add New Topic
+</a>
+
+<br>
+
+<a class="back-link" href="{% url 'school_app:departments' %}">← Back to Departments</a>
+<br>
+<a class="back-link" href="{% url 'school_app:subjects' department.id %}">← Back to Subjects</a>
+
+{% endblock content %}

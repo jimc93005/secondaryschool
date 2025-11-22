@@ -1,0 +1,219 @@
+{% extends 'school_app/base.html' %}
+
+{% load static %}
+{% block content %}
+
+<style>
+/* ==== GLOBAL LAYOUT ==== */
+body.light-mode {
+    background: linear-gradient(135deg, #b9e9ff, #e3f6ff);
+    color: #003;
+}
+
+body.dark-mode {
+    background: #0d1117;
+    color: #e6edf3;
+}
+
+.container {
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.15);
+    animation: popIn .6s ease-out;
+    transition: background .4s ease, color .4s ease;
+}
+
+/* ==== FORM TITLE ==== */
+.form-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+/* ==== LOGO ==== */
+.logo {
+    width: 70px;
+    display: block;
+    margin: auto;
+    margin-bottom: 12px;
+    opacity: .95;
+    animation: fadeDown .7s ease-out;
+}
+
+/* ==== INPUT FIELDS ==== */
+input {
+    width: 100%;
+    padding: 13px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 1px solid #80caff;
+    background: rgba(255,255,255,0.5);
+    outline: none;
+    transition: box-shadow .3s ease;
+}
+
+input:focus {
+    box-shadow: 0 0 10px rgba(0,170,255,0.6);
+}
+
+/* ==== HINT TEXT ==== */
+.hint-text {
+    font-size: 13px;
+    color: #0040ff;
+    margin-top: -6px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* ==== SHOW PASSWORD ==== */
+.show-pass {
+    margin-bottom: 15px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #0040ff;
+}
+
+/* ==== SUBMIT BUTTON ==== */
+button {
+    width: 100%;
+    padding: 14px;
+    background: #008cff;
+    color: white;
+    border: none;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,140,255,0.5);
+}
+
+/* ==== DARK MODE TOGGLE ==== */
+.toggle-dark {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    background: #008cff;
+    padding: 10px 16px;
+    color: white;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: .3s;
+}
+
+.toggle-dark:hover {
+    background: #006fd1;
+}
+
+/* ==== SUCCESS POPUP ==== */
+.popup {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    padding: 18px 25px;
+    background: #00cc66;
+    color: white;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    animation: slideIn .7s ease forwards;
+    opacity: 0;
+}
+
+/* ==== ANIMATIONS ==== */
+@keyframes popIn {
+    from { transform: scale(.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+</style>
+
+<!-- DARK MODE BUTTON -->
+<div class="toggle-dark" onclick="toggleDarkMode()">Dark Mode</div>
+
+<div class="container">
+
+    <!-- Logo -->
+    <img src="{% static 'images/logo.png' %}" class="logo">
+
+    <h2 class="form-title">Create Your Account</h2>
+
+    <form method="post" action="{% url 'users:register' %}">
+        {% csrf_token %}
+
+        <!-- Username -->
+        <label>Username:</label>
+        {{ form.username }}
+        <span class="hint-text">Use 4–20 characters, letters and numbers only.</span>
+
+        <!-- Password -->
+        <label>Password:</label>
+        {{ form.password1 }}
+        <span class="hint-text">Minimum 8 characters, include letters & numbers.</span>
+
+        <!-- Confirm Password -->
+        <label>Confirm Password:</label>
+        {{ form.password2 }}
+        <span class="hint-text">Re-enter your password for confirmation.</span>
+
+        <!-- Show password checkbox -->
+        <label class="show-pass">
+            <input type="checkbox" onclick="togglePassword()"> Show Password
+        </label>
+
+        <button name="submit">Register</button>
+        <input type="hidden" name="next" value="{% url 'school_app:departments' %}">
+    </form>
+</div>
+
+<!-- SUCCESS POPUP (Triggers if message exists) -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="popup">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<script>
+/* ==== DARK MODE TOGGLE ==== */
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    document.body.classList.toggle("light-mode");
+}
+
+/* ==== SHOW PASSWORD FUNCTION ==== */
+function togglePassword() {
+    const fields = document.querySelectorAll("input[type='password']");
+    fields.forEach(f => f.type = f.type === "password" ? "text" : "password");
+}
+
+/* ==== SHOW POPUP ==== */
+window.addEventListener('load', () => {
+    const popup = document.querySelector('.popup');
+    if (popup) {
+        popup.style.opacity = '1';
+        setTimeout(() => { popup.style.opacity = '0'; }, 4000);
+    }
+});
+</script>
+
+{% endblock content %}

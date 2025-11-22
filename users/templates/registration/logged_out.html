@@ -1,0 +1,65 @@
+{% extends 'school_app/base.html' %}
+
+{% block content %}
+
+<style>
+/* Container for logout message */
+.logout-container {
+    background: linear-gradient(135deg, #b9e9ff, #e3f6ff);
+    padding: 50px 20px;
+    max-width: 500px;
+    margin: 50px auto; /* centers the box */
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.8s ease;
+}
+
+/* Logout icon */
+.logout-icon {
+    font-size: 60px;
+    color: #0040ff;
+    margin-bottom: 20px;
+}
+
+/* Message text */
+.logout-container p {
+    font-size: 1.2rem;
+    color: #0033cc;
+    margin-bottom: 30px;
+}
+
+/* Home button */
+.btn-home {
+    background: #0040ff;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.btn-home:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 64, 255, 0.4);
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<div class="logout-container">
+    <div class="logout-icon">
+        <i class="fas fa-sign-out-alt"></i>
+    </div>
+    <p>You have been logged out successfully. Thank you for visiting!</p>
+    <a href="{% url 'school_app:departments' %}" class="btn btn-home">Go to Home</a>
+</div>
+
+<!-- Font Awesome for logout icon -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+{% endblock content %}

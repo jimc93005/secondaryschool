@@ -1,0 +1,16 @@
+{% extends 'school_app/base.html' %}
+
+{% block content %}
+  <h2>Add a New Department</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Department</button>
+  </form>
+
+  <p>
+    <!-- Link back to the list of all departments -->
+    <a href="{% url 'school_app:departments' %}">Back to Departments</a>
+  </p>
+{% endblock content %}

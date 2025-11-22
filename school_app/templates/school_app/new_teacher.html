@@ -1,0 +1,17 @@
+{% extends 'school_app/base.html '%}
+{% block content %}
+
+    <h2>Add another {{subject}}</h2>
+
+     <form action="{% url 'school_app:new_teacher' subject.id %}" method='post'>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Teacher</button>
+    </form>
+
+    <p>
+    <a href="{% url 'school_app:departments' %}">Back to Departments</a>
+
+    <a href="{% url 'school_app:topics' subject.id %}">Back to Topics</a>
+  </p>
+{% endblock content %}

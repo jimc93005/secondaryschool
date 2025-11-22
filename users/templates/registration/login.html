@@ -1,0 +1,196 @@
+{% extends 'school_app/base.html' %}
+{% block content %}
+
+<style>
+
+/* ==== PAGE BACKGROUND ==== */
+body {
+    background: linear-gradient(135deg, #b3e5fc, #e3f2fd);
+    min-height: 100vh;
+    padding-top: 40px;
+}
+
+/* ==== LOGIN CARD ==== */
+.login-container {
+    width: 90%;
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.32);
+    backdrop-filter: blur(18px);
+    border-radius: 18px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.18);
+    animation: fadeInUp .7s ease;
+}
+
+/* ==== LOGO ==== */
+.login-logo {
+    width: 80px;
+    display: block;
+    margin: 0 auto 15px auto;
+    animation: fadeIn .8s ease;
+}
+
+/* ==== TITLE ==== */
+.login-title {
+    text-align: center;
+    color: #01579b;
+    font-weight: 800;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+/* ==== PASSWORD DESCRIPTION ==== */
+.password-info {
+    background: rgba(33,150,243,0.1);
+    padding: 10px 14px;
+    border-left: 3px solid #0288d1;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #01579b;
+    margin-top: -10px;
+    margin-bottom: 12px;
+}
+
+/* ==== FORM INPUTS ==== */
+.login-container input {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(2,119,189,0.35);
+    margin-bottom: 18px;
+    font-size: 16px;
+    outline: none;
+    transition: border .25s ease, box-shadow .25s ease;
+}
+
+.login-container input:focus {
+    border-color: #0288d1;
+    box-shadow: 0 0 10px rgba(2,118,189,0.35);
+}
+
+/* ==== SHOW PASSWORD CHECKBOX ==== */
+.show-pass {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: -10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #01579b;
+}
+
+/* ==== LOGIN BUTTON ==== */
+.login-btn {
+    width: 100%;
+    padding: 13px;
+    background: #0288d1;
+    color: white;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .25s ease, background .25s ease, box-shadow .25s ease;
+}
+
+.login-btn:hover {
+    background: #0277bd;
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(2,119,189,0.35);
+}
+
+/* ==== ERROR MESSAGE ==== */
+.error-message {
+    background: rgba(255, 82, 82, 0.15);
+    color: #b71c1c;
+    padding: 10px 14px;
+    border-left: 4px solid #d32f2f;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    font-size: 15px;
+}
+
+/* ==== ANIMATIONS ==== */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+</style>
+
+<!-- ===== SOFT CLICK SOUND ===== -->
+<audio id="clickSound">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2397/2397-preview.mp3">
+</audio>
+
+<!-- ===== LOGIN BOX ===== -->
+<div class="login-container">
+
+    <!-- Small Logo -->
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+         class="login-logo">
+
+    <h2 class="login-title">Welcome Back 👋</h2>
+
+    {% if form.errors %}
+        <p class="error-message">
+            Your username and password didn’t match. Please try again.
+        </p>
+    {% endif %}
+
+    <form method="post" action="{% url 'users:login' %}">
+        {% csrf_token %}
+
+        {{ form.username.label_tag }}
+        {{ form.username }}
+
+        {{ form.password.label_tag }}
+        {{ form.password }}
+
+        <!-- Password requirements -->
+        <div class="password-info">
+            🔒 Password must be at least 8 characters,
+            contain letters and numbers,
+            and must match your registered credentials.
+        </div>
+
+        <!-- Show password -->
+        <label class="show-pass">
+            <input type="checkbox" id="togglePassword">
+            Show Password
+        </label>
+
+        <br>
+
+        <!-- Login button -->
+        <button class="login-btn" name="submit" onclick="playSound()">
+            Log In
+        </button>
+
+        <input type="hidden" name="next" value="{% url 'school_app:index' %}">
+    </form>
+</div>
+
+<!-- ===== JS: SHOW PASSWORD + SOUND ===== -->
+<script>
+    // Show/Hide Password
+    const passwordField = document.getElementById("id_password");
+    const togglePass = document.getElementById("togglePassword");
+
+    togglePass.addEventListener("change", function () {
+        passwordField.type = this.checked ? "text" : "password";
+    });
+
+    // Soft click sound
+    function playSound() {
+        document.getElementById("clickSound").play();
+    }
+</script>
+
+{% endblock content %}

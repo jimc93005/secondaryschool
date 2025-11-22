@@ -1,0 +1,116 @@
+{% extends 'school_app/base.html' %}
+{% block content %}
+
+<style>
+/* ==== GOLD BACKGROUND ==== */
+body {
+    background: linear-gradient(135deg, #fceabb, #f8b500);
+    padding: 20px;
+}
+
+/* ==== PAGE TITLE ==== */
+.page-title {
+    color: #704214;
+    font-size: 32px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* ==== CONTAINER ==== */
+.teacher-container {
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(18px);
+    padding: 25px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.4);
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto 25px auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+
+/* ==== TEACHER CARD ==== */
+.teacher-card {
+    background: rgba(255,255,255,0.33);
+    padding: 15px 20px;
+    margin-bottom: 14px;
+    border-radius: 14px;
+    border-left: 5px solid #b8860b;
+}
+
+.teacher-date {
+    font-size: 13px;
+    color: #5e4610;
+}
+
+.teacher-name {
+    font-size: 18px;
+    margin-top: 6px;
+    color: #3e2a04;
+    font-weight: 500;
+}
+
+/* ==== GOLD BUTTON ==== */
+.gold-btn {
+    display: inline-block;
+    background: #b8860b;
+    padding: 12px 22px;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: background .25s ease;
+}
+
+.gold-btn:hover {
+    background: #916f08;
+}
+
+/* ==== BACK LINKS ==== */
+.back-link {
+    display: inline-block;
+    margin-top: 18px;
+    color: #5e3f05;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+</style>
+
+<h2 class="page-title">Teachers for {{ subject.text }}</h2>
+
+<div class="teacher-container">
+    {% for name in teacher %}
+        <div class="teacher-card">
+            <div class="teacher-date">
+                Date added: {{ name.date_added|date:"M d, Y H:i" }}
+            </div>
+
+            <div class="teacher-name">
+                {{ name.text }}
+            </div>
+        </div>
+    {% empty %}
+        <div class="teacher-card">
+            No teacher for {{ subject }} has been added yet.
+        </div>
+    {% endfor %}
+</div>
+
+<a class="gold-btn" href="{% url 'school_app:new_teacher' subject.id %}">
+    Add Subject Teacher
+</a>
+
+<br><br>
+
+<a class="back-link" href="{% url 'school_app:departments' %}">← Back to Departments</a>
+<br>
+<a class="back-link" href="{% url 'school_app:subjects' department.id %}">← Back to Subjects</a>
+
+{% endblock content %}

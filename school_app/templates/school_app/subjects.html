@@ -1,0 +1,123 @@
+{% extends "school_app/base.html" %}
+
+{% block content %}
+<style>
+    /* ----------- Horizontal Row Container ----------- */
+    .row-boxes {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    /* ------------ Glass Box With Blue Watermark ------------ */
+    .glass-box {
+        background: rgba(0, 102, 255, 0.15); /* blue watermark effect */
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        padding: 14px 22px;
+        border-radius: 14px;
+        border: 1px solid rgba(0, 102, 255, 0.25);
+        transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+        text-decoration: none;
+        display: inline-block;
+        color: #0040ff; /* blue text */
+        font-weight: 600;
+        width: 260px; /* equal-size boxes */
+        text-align: center;
+    }
+
+    .glass-box:hover {
+        transform: scale(1.07);
+        background: rgba(0, 102, 255, 0.25);
+        box-shadow: 0 10px 25px rgba(0, 0, 120, 0.35);
+        color: #0033cc;
+    }
+
+    /* ----------- Subject Card ----------- */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(16px);
+        border-radius: 16px;
+        padding: 20px;
+        margin: 20px 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        animation: fadeIn 0.7s ease-in-out;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    }
+
+    .glass-card:hover {
+        transform: translateY(-4px);
+    }
+
+    /* ----------- Blue Title ----------- */
+    .page-title {
+        color: #0040ff;
+        font-weight: bold;
+    }
+
+    /* ----------- Fade-in Animation ----------- */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<h2 class="page-title text-3xl mb-4">
+    Subjects under {{ department.text }}
+</h2>
+
+<p>
+    <a class="glass-box" href="{% url 'school_app:new_subject' department.id %}">
+        Add new subject
+    </a>
+</p>
+
+<ul style="list-style: none; padding-left: 0;">
+    {% for subject in subjects %}
+        <li class="glass-card">
+
+            <h2 class="text-2xl font-bold mb-3" style="color:#0040ff;">
+                {{ subject.text }}
+            </h2>
+
+            <!-- ---------- 3 Horizontal Boxes ---------- -->
+            <div class="row-boxes">
+
+                <!-- Topics -->
+                <a class="glass-box"
+                   href="{% url 'school_app:topics' subject.id %}">
+                    Topics under {{ subject.text }}
+                </a>
+
+                <!-- Teacher -->
+                <a class="glass-box"
+                   href="{% url 'school_app:subject_teacher' subject.id %}">
+                    Subject teacher
+                </a>
+
+                <!-- Edit -->
+                <a class="glass-box"
+                   href="{% url 'school_app:edit_subject' subject.id %}">
+                    Edit Subject
+                </a>
+
+            </div>
+
+            <p class="text-sm mt-3 opacity-75">
+                Added on: {{ subject.date_added|date:"M d, Y H:i" }}
+            </p>
+        </li>
+
+    {% empty %}
+        <li class="glass-card">No subjects have been added for this department yet.</li>
+    {% endfor %}
+</ul>
+
+<p>
+    <a class="glass-box" href="{% url 'school_app:departments' %}">
+        Back to Departments
+    </a>
+</p>
+
+{% endblock content %}

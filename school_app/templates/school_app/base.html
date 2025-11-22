@@ -1,0 +1,220 @@
+{% load bootstrap4 %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{% block title %}Learning Log{% endblock %}</title>
+
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+
+    <style>
+        /* ===== Stronger Glass Effect ===== */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        /* Dark Mode Glass */
+        body.dark-mode .glass-nav {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* Navbar Links */
+        .nav-link, .navbar-brand {
+            font-weight: 600;
+            transition: 0.4s;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ===== Animations ===== */
+        .fade-in {
+            animation: fadeIn 0.9s ease forwards;
+        }
+
+        .slide-up {
+            animation: slideUp 0.9s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        @keyframes slideUp {
+            from {opacity: 0; transform: translateY(25px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        /* Page Container */
+        .main-container {
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        /* Glow Buttons */
+        .btn-glow:hover {
+            box-shadow: 0 0 12px rgba(0,123,255,0.7);
+        }
+
+        /* Dark Mode Style */
+        body.dark-mode {
+            background-color: #121212;
+            color: #eaeaea;
+        }
+
+        body.dark-mode .card {
+            background: #1e1e1e;
+            border-color: #333;
+        }
+
+        body.dark-mode .btn-primary {
+            background-color: #0d6efd;
+        }
+
+        body.dark-mode .footer {
+            color: #aaa;
+        }
+
+        /* Dark mode toggle button */
+        #darkModeToggle {
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+        }
+
+        body.dark-mode #darkModeToggle {
+            color: #fff;
+            border-color: #555;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body class="fade-in">
+
+<!-- ================= NAVBAR ================ -->
+<nav class="navbar navbar-expand-md glass-nav mb-4">
+    <a class="navbar-brand" href="{% url 'school_app:index' %}">Secondary School</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+
+        <!-- Left -->
+        <ul class="navbar-nav mr-auto slide-up">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'school_app:departments' %}">Departments</a>
+            </li>
+        </ul>
+
+        <!-- Right -->
+        <ul class="navbar-nav ml-auto slide-up">
+
+            <!-- Dark Mode Button -->
+            <li class="nav-item">
+                <span id="darkModeToggle" class="nav-link">
+                    🌙 Dark Mode
+                </span>
+            </li>
+
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <span class="nav-link font-weight-bold">
+                        Hello, {{ user.username }}
+                    </span>
+                </li>
+
+                <li class="nav-item">
+                    <form action="{% url 'users:logout' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-danger btn-sm text-white">
+                            Log out
+                        </button>
+                    </form>
+                </li>
+
+            {% else %}
+                <li class="nav-item mr-2">
+                    <a class="nav-link btn btn-success btn-sm text-white btn-glow"
+                       href="{% url 'users:register' %}">
+                        Register
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary btn-sm text-white btn-glow"
+                       href="{% url 'users:login' %}">
+                        Log in
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+
+<!-- ============== MAIN PAGE CONTENT ============== -->
+<main class="container main-container slide-up">
+    <div class="pb-2 mb-2 border-bottom">
+        {% block page_header %}{% endblock page_header %}
+    </div>
+
+    <div>
+        {% block content %}{% endblock content %}
+    </div>
+</main>
+
+
+<!-- ================== FOOTER ================== -->
+<div class="footer slide-up">
+    &copy; {{ now|date:"Y" }} Learning Log · Glass UI + Dark Mode
+</div>
+
+
+<!-- ===== Dark Mode Script ===== -->
+<script>
+    const body = document.body;
+    const toggle = document.getElementById("darkModeToggle");
+
+    // Load saved mode
+    if (localStorage.getItem("darkMode") === "enabled") {
+        body.classList.add("dark-mode");
+        toggle.textContent = "☀️ Light Mode";
+    }
+
+    toggle.addEventListener("click", function() {
+        body.classList.toggle("dark-mode");
+
+        if (body.classList.contains("dark-mode")) {
+            toggle.textContent = "☀️ Light Mode";
+            localStorage.setItem("darkMode", "enabled");
+        } else {
+            toggle.textContent = "🌙 Dark Mode";
+            localStorage.setItem("darkMode", "disabled");
+        }
+    });
+</script>
+
+</body>
+</html>
