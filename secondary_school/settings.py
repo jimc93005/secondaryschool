@@ -84,14 +84,30 @@ WSGI_APPLICATION = 'secondary_school.wsgi.application'
 
 import os
 import dj_database_url
+from pathlib import Path
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'),
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Get DATABASE_URL from environment variables
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    # Use PostgreSQL on Render
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    # Local development: SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 
