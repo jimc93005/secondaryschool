@@ -1,0 +1,3 @@
+departments/
+__pycache__/
+*.sqlite3
