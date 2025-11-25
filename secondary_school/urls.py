@@ -18,10 +18,13 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import path, include
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('', include(('school_app.urls', 'school_app'), namespace='school_app')),
+
+
 ]
 
 
