@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', cast=bool)
+DEBUG = config('DEBUG', defaut=False, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
@@ -86,22 +86,23 @@ WSGI_APPLICATION = 'secondary_school.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
-if DEBUG:
+
     # Local development → use SQLite
-    DATABASES = {
+DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
 
-else:
     # Production (Render) → use PostgreSQL
+DATABASE_URL = config('DATABASE_URL', default=None)
+if DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.parse(
             config('DATABASE_URL'),
             conn_max_age=600,
-            ssl_require=True,   # use False only if Render says SSL is not required
+            ssl_require=True,  # use False only if Render says SSL is not required
         )
     }
 
@@ -154,5 +155,3 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = "users:login"
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
